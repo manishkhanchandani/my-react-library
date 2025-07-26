@@ -317,6 +317,12 @@ export default [
 
 run yarn run lint
 
+yarn build,
+
+if you get error in toBeInTheDocument, then:
+
+yarn add -D @types/testing-library__jest-dom
+
 
 
 npm login
