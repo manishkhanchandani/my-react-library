@@ -1,0 +1,247 @@
+mkdir my-react-library
+cd my-react-library
+npm init --scope=@mkgalaxy
+
+
+package script
+"scripts": {
+    "build": "tsc && yarn copy-styles",
+    "copy-styles": "copyfiles -u 1 \"src/**/*.{css,scss}\" dist",
+    "test": "jest --config jest.config.cjs",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
+    "coverage": "jest --config jest.config.cjs --coverage",
+    "posttest": "yarn lint",
+    "prepublishOnly": "yarn test && yarn build"
+  },
+
+
+npm install --save-dev typescript @types/node
+npx tsc --init
+
+
+tsconfig.json
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "target": "ES2016",
+    "lib": ["DOM", "ES2016", "DOM.Iterable"],
+    "declaration": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["jest", "react", "node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["src", "**/*.test.ts", "**/*.test.tsx"]
+}
+
+mkdir src
+cd src
+mkdir types
+
+
+touch src/index.ts
+touch src/MyComponent.ts
+
+index.ts:
+export * from "./MyComponent";
+
+MyComponent.ts:
+export const greet = (name: string): string => {
+  return `Hello, ${name}`;
+};
+
+
+yarn add copyfiles
+yarn run build
+
+update package.json
+{
+  "name": "your-package-name",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "keywords": [],
+  "author": "Author",
+  "license": "MIT"
+}
+
+Add .npmignore or Use files Field
+
+src/
+node_modules/
+tsconfig.json
+
+
+Unit test
+npm install --save-dev jest ts-jest @types/jest
+yarn add -D jest ts-jest @types/jest
+
+npx ts-jest config:init
+
+Your jest.config.js should look like this:
+
+/** @type {import("jest").Config} **/
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  testMatch: ["**/?(*.)+(test).[jt]s?(x)"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  transform: {
+    "^.+\\.(ts|tsx)$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.json",
+        useESM: true,
+      },
+    ],
+  },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  transformIgnorePatterns: [
+    "node_modules/(?!(string-width|strip-ansi|ansi-regex|cliui)/)",
+  ],
+};
+
+also create jest.config.cjs 
+/** @type {import("jest").Config} **/
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  testMatch: ["**/?(*.)+(test).[jt]s?(x)"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  transform: {
+    "^.+\\.(ts|tsx)$": ["ts-jest"],
+  },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(string-width|strip-ansi|ansi-regex|jest-cli)/)",
+  ],
+};
+
+
+
+and jest.config.mjs
+/** @type {import("jest").Config} **/
+export default {
+  preset: "ts-jest/presets/js-with-ts-esm",
+  testEnvironment: "jsdom",
+  testMatch: ["**/?(*.)+(test).[jt]s?(x)"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "mjs"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  transform: {
+    "^.+\\.(ts|tsx)$": [
+      "ts-jest",
+      {
+        tsconfig: "tsconfig.json",
+        useESM: true,
+      },
+    ],
+  },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+  },
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
+};
+
+Inside src, create __tests__ folder,
+and MyComponent.test.ts
+
+import { greet } from "../";
+
+describe("greet", () => {
+  it("returns the correct greeting", () => {
+    expect(greet("Manish")).toBe("Hello, Manish");
+  });
+});
+
+
+npm install --save-dev jest-environment-jsdom @testing-library/jest-dom
+yarn add -D jest-environment-jsdom @testing-library/jest-dom
+
+Add following file:
+jest.setup.ts
+
+import "@testing-library/jest-dom";
+
+
+run:
+yarn run test
+yarn test -- --coverage
+
+
+React:
+npm install react react-dom
+yarn add react react-dom
+
+npm install --save-dev @types/react @types/react-dom
+yarn add -D @types/react @types/react-dom
+
+create file: src/MyComponent2.tsx
+Install React Testing Library:
+
+
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+yarn add -D @testing-library/react @testing-library/jest-dom
+
+
+
+update index.ts file as
+export * from "./MyComponent";
+export { default as MyComponent2 } from "./MyComponent2";
+
+update version in package.json for following
+"@testing-library/dom": "^9.3.3",
+"@testing-library/jest-dom": "^5.17.0",
+"@testing-library/react": "^14.1.2",
+"@testing-library/user-event": "^14.5.1",
+
+Create a test file:
+// src/__tests__/MyComponent2.test.tsx
+
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { MyComponent2 } from "..";
+
+test("renders hello message", () => {
+  render(<MyComponent2 />);
+
+  expect(screen.getByText(/hello from react/i)).toBeInTheDocument();
+});
+
+
+run yarn test
+
+Optional: Add README, License, GitHub Link
+Add following in git repo if needed
+"repository": {
+  "type": "git",
+  "url": https://github.com/yourname/your-repo.git
+}
+
+
+
+npm login
+npm run build
+npm publish --access public
+
+npm install your-package-name
+import { greet } from 'your-package-name';
+console.log(greet('world')); // Hello, world

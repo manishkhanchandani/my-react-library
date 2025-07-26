@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "target": "ES2016",
+    "lib": ["DOM", "ES2016", "DOM.Iterable"],
+    "declaration": true,
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["jest", "react", "node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["src", "**/*.test.ts", "**/*.test.tsx"]
+}
